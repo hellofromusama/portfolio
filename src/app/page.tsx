@@ -1,4 +1,3 @@
-import Image from "next/image";
 
 export default function Home() {
   return (
@@ -72,12 +71,12 @@ export default function Home() {
                 Building Digital Solutions
               </h3>
               <p className="text-slate-300 mb-6 leading-relaxed">
-                I'm a passionate full stack developer with expertise in modern web technologies,
+                I&apos;m a passionate full stack developer with expertise in modern web technologies,
                 cloud platforms, and enterprise solutions. I love turning complex problems into
                 simple, beautiful, and intuitive designs.
               </p>
               <p className="text-slate-300 mb-6 leading-relaxed">
-                With experience across various industries, I've developed scalable applications,
+                With experience across various industries, I&apos;ve developed scalable applications,
                 automated business processes, and created seamless user experiences that drive
                 business growth.
               </p>
@@ -219,10 +218,10 @@ export default function Home() {
       <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            Let's Work Together
+            Let&apos;s Work Together
           </h2>
           <p className="text-xl text-slate-300 mb-12">
-            Ready to bring your ideas to life? I'd love to hear about your project.
+            Ready to bring your ideas to life? I&apos;d love to hear about your project.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <a
