@@ -243,11 +243,19 @@ export default async function ProjectDetail({ params }: { params: Promise<{ id: 
             <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
               UJ
             </Link>
-            <div className="hidden md:flex space-x-8">
+            <div className="hidden md:flex space-x-8 items-center">
               <Link href="/#about" className="hover:text-blue-400 transition-all duration-300">About</Link>
               <Link href="/#projects" className="hover:text-blue-400 transition-all duration-300">Projects</Link>
-              <Link href="/#skills" className="hover:text-blue-400 transition-all duration-300">Skills</Link>
+              <Link href="/ideas" className="hover:text-purple-400 transition-all duration-300">Ideas</Link>
               <Link href="/contact" className="hover:text-blue-400 transition-all duration-300">Contact</Link>
+              <a
+                href="https://linkedin.com/in/usamajaved"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
+              >
+                Hire Me →
+              </a>
             </div>
           </div>
         </div>
