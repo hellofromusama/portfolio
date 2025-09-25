@@ -141,7 +141,7 @@ export default function Home() {
               </a>
 
               <a
-                href="mailto:usama.javed@example.com"
+                href="mailto:hellofromusama@gmail.com"
                 className="group border-2 border-slate-600 hover:border-blue-400 text-slate-300 hover:text-white px-10 py-5 rounded-full font-semibold transition-all duration-300 hover:bg-blue-400/10"
               >
                 <span className="group-hover:mr-2 transition-all duration-300">Get In Touch</span>
@@ -343,7 +343,7 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row gap-8 justify-center items-center mb-12">
             <a
-              href="mailto:usama.javed@example.com"
+              href="mailto:hellofromusama@gmail.com"
               className="group bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-10 py-5 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-blue-500/25"
             >
               <span className="group-hover:mr-2 transition-all duration-300">Send me an email</span>
