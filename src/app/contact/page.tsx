@@ -12,6 +12,7 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [copied, setCopied] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,17 +20,28 @@ export default function Contact() {
 
     try {
       // Create mailto link with form data
-      const mailtoLink = `mailto:hellofromusama@gmail.com?subject=${encodeURIComponent(
-        formData.subject
-      )}&body=${encodeURIComponent(
+      const subject = encodeURIComponent(formData.subject || "Portfolio Inquiry");
+      const body = encodeURIComponent(
         `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-      )}`;
+      );
 
-      // Open default email client
-      window.location.href = mailtoLink;
+      const mailtoLink = `mailto:hellofromusama@gmail.com?subject=${subject}&body=${body}`;
+
+      // Create a temporary anchor element and click it
+      const link = document.createElement('a');
+      link.href = mailtoLink;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
       setSubmitStatus("success");
-      setFormData({ name: "", email: "", subject: "", message: "" });
+
+      // Don't clear the form immediately so user can see their message
+      setTimeout(() => {
+        setFormData({ name: "", email: "", subject: "", message: "" });
+        setSubmitStatus("idle");
+      }, 3000);
     } catch {
       setSubmitStatus("error");
     }
@@ -42,6 +54,12 @@ export default function Contact() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const copyEmail = () => {
+    navigator.clipboard.writeText("hellofromusama@gmail.com");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -151,23 +169,44 @@ export default function Contact() {
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-slate-600 disabled:to-slate-700 text-white py-4 px-6 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 disabled:scale-100 shadow-lg hover:shadow-blue-500/25"
-                >
-                  {isSubmitting ? "Sending..." : "Send Message"}
-                </button>
+                <div className="space-y-4">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-slate-600 disabled:to-slate-700 text-white py-4 px-6 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 disabled:scale-100 shadow-lg hover:shadow-blue-500/25"
+                  >
+                    {isSubmitting ? "Opening Email..." : "Open Email Client"}
+                  </button>
+
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-slate-600"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="px-4 bg-slate-900/50 text-slate-400">or</span>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={copyEmail}
+                    className="w-full border-2 border-slate-600 hover:border-blue-400 text-slate-300 hover:text-white py-4 px-6 rounded-lg font-semibold transition-all duration-300 hover:bg-blue-400/10"
+                  >
+                    {copied ? "Email Copied!" : "Copy Email Address"}
+                  </button>
+                </div>
 
                 {submitStatus === "success" && (
                   <div className="text-green-400 text-center p-4 bg-green-400/10 rounded-lg border border-green-400/20">
-                    Your email client should open with the message pre-filled!
+                    <p className="mb-2">Your email client should open with the message pre-filled!</p>
+                    <p className="text-sm text-green-300">If it didn&apos;t open, you can copy the email address below.</p>
                   </div>
                 )}
 
                 {submitStatus === "error" && (
                   <div className="text-red-400 text-center p-4 bg-red-400/10 rounded-lg border border-red-400/20">
-                    Something went wrong. Please try again or email me directly.
+                    <p className="mb-2">Email client couldn&apos;t be opened automatically.</p>
+                    <p className="text-sm text-red-300">Please copy the email address below and send manually.</p>
                   </div>
                 )}
               </form>
@@ -185,16 +224,28 @@ export default function Contact() {
               </div>
 
               <div className="space-y-6">
-                <div className="flex items-center space-x-4 p-6 bg-slate-900/50 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-all duration-300">
-                  <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                    <span className="text-2xl">✉️</span>
+                <div className="flex items-center justify-between p-6 bg-slate-900/50 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-all duration-300">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                      <span className="text-2xl">✉️</span>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-blue-400 mb-1">Email</h3>
+                      <button
+                        onClick={copyEmail}
+                        className="text-slate-300 hover:text-blue-400 transition-colors text-left"
+                        title="Click to copy email"
+                      >
+                        hellofromusama@gmail.com
+                      </button>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-blue-400 mb-1">Email</h3>
-                    <a href="mailto:hellofromusama@gmail.com" className="text-slate-300 hover:text-blue-400 transition-colors">
-                      hellofromusama@gmail.com
-                    </a>
-                  </div>
+                  <button
+                    onClick={copyEmail}
+                    className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg transition-colors text-sm font-medium"
+                  >
+                    {copied ? "Copied!" : "Copy"}
+                  </button>
                 </div>
 
                 <div className="flex items-center space-x-4 p-6 bg-slate-900/50 rounded-xl border border-slate-700 hover:border-purple-500/50 transition-all duration-300">
