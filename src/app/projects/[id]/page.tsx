@@ -226,8 +226,9 @@ const projects = {
   }
 };
 
-export default function ProjectDetail({ params }: { params: { id: string } }) {
-  const project = projects[params.id as keyof typeof projects];
+export default async function ProjectDetail({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const project = projects[id as keyof typeof projects];
 
   if (!project) {
     notFound();
