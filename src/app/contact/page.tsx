@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import emailjs from '@emailjs/browser';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -19,31 +20,65 @@ export default function Contact() {
     setIsSubmitting(true);
 
     try {
-      // Create mailto link with form data
+      // Initialize EmailJS (you only need to do this once)
+      emailjs.init('5eLu74wM2kSgwd6fT'); // Your EmailJS public key
+
+      // Send main contact email to you
+      const result = await emailjs.send(
+        'service_gk2ggy2', // Your EmailJS service ID
+        'template_f6wbh0a', // Your contact email template ID
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          to_name: 'Usama Javed',
+          to_email: 'hellofromusama@gmail.com',
+          subject: formData.subject || "Portfolio Inquiry",
+          message: formData.message,
+          reply_to: formData.email,
+          time: new Date().toLocaleString()
+        }
+      );
+
+      // Send auto-reply confirmation to sender
+      try {
+        await emailjs.send(
+          'service_gk2ggy2', // Your EmailJS service ID
+          'template_k0jvdur', // Your auto-reply template ID
+          {
+            name: formData.name,
+            to_email: formData.email,
+            title: formData.subject || "Portfolio Inquiry",
+            reply_to: 'hellofromusama@gmail.com'
+          }
+        );
+      } catch (autoReplyError) {
+        console.log('Auto-reply failed, but main email sent:', autoReplyError);
+      }
+
+      if (result.status === 200) {
+        setSubmitStatus("success");
+        setTimeout(() => {
+          setFormData({ name: "", email: "", subject: "", message: "" });
+          setSubmitStatus("idle");
+        }, 3000);
+      } else {
+        throw new Error('Email sending failed');
+      }
+    } catch (error) {
+      console.error('Email error:', error);
+      setSubmitStatus("error");
+      // Fallback to mailto as backup
       const subject = encodeURIComponent(formData.subject || "Portfolio Inquiry");
       const body = encodeURIComponent(
         `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
       );
-
       const mailtoLink = `mailto:hellofromusama@gmail.com?subject=${subject}&body=${body}`;
-
-      // Create a temporary anchor element and click it
       const link = document.createElement('a');
       link.href = mailtoLink;
       link.target = '_blank';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-
-      setSubmitStatus("success");
-
-      // Don't clear the form immediately so user can see their message
-      setTimeout(() => {
-        setFormData({ name: "", email: "", subject: "", message: "" });
-        setSubmitStatus("idle");
-      }, 3000);
-    } catch {
-      setSubmitStatus("error");
     }
 
     setIsSubmitting(false);
@@ -78,7 +113,7 @@ export default function Contact() {
               <Link href="/contact" className="text-blue-400">Contact</Link>
               <Link href="/tech-stack" className="hover:text-blue-400 transition-all duration-300 hover:scale-105">Tech</Link>
               <a
-                href="https://linkedin.com/in/usamajaved"
+                href="https://www.linkedin.com/in/hellofromusama/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
@@ -183,7 +218,7 @@ export default function Contact() {
                     disabled={isSubmitting}
                     className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-slate-600 disabled:to-slate-700 text-white py-4 px-6 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 disabled:scale-100 shadow-lg hover:shadow-blue-500/25"
                   >
-                    {isSubmitting ? "Opening Email..." : "Open Email Client"}
+                    {isSubmitting ? "Sending..." : "Send"}
                   </button>
 
                   <div className="relative">
@@ -263,12 +298,12 @@ export default function Contact() {
                   <div>
                     <h3 className="text-xl font-semibold text-purple-400 mb-1">LinkedIn</h3>
                     <a
-                      href="https://linkedin.com/in/usamajaved"
+                      href="https://www.linkedin.com/in/hellofromusama/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-slate-300 hover:text-purple-400 transition-colors"
                     >
-                      linkedin.com/in/usamajaved
+                      linkedin.com/in/hellofromusama
                     </a>
                   </div>
                 </div>

@@ -99,7 +99,16 @@ export default function Home() {
               <Link href="/contact" className="hover:text-blue-400 transition-all duration-300 hover:scale-105">Contact</Link>
               <Link href="/tech-stack" className="hover:text-blue-400 transition-all duration-300 hover:scale-105">Tech</Link>
               <a
-                href="https://linkedin.com/in/usamajaved"
+                href="https://wa.me/61433695387"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center gap-2"
+                title="Chat on WhatsApp"
+              >
+                <span>💬</span>
+              </a>
+              <a
+                href="https://www.linkedin.com/in/hellofromusama/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
@@ -369,7 +378,7 @@ export default function Home() {
 
           <div className="flex justify-center gap-8">
             <a
-              href="https://linkedin.com/in/usamajaved"
+              href="https://www.linkedin.com/in/hellofromusama/"
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center gap-2 text-slate-400 hover:text-blue-400 transition-all duration-300 hover:scale-110"
@@ -387,13 +396,13 @@ export default function Home() {
               <span className="group-hover:underline">GitHub</span>
             </a>
             <a
-              href="https://twitter.com/usamajaved"
+              href="https://x.com/HelloFromUsama_"
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center gap-2 text-slate-400 hover:text-blue-400 transition-all duration-300 hover:scale-110"
             >
               <span className="text-2xl">🐦</span>
-              <span className="group-hover:underline">Twitter</span>
+              <span className="group-hover:underline">X (Twitter)</span>
             </a>
           </div>
         </div>

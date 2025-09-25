@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import emailjs from '@emailjs/browser';
 
 export default function Ideas() {
   const [formData, setFormData] = useState({
@@ -32,32 +33,69 @@ export default function Ideas() {
     setIsSubmitting(true);
 
     try {
-      const subject = encodeURIComponent(`New Idea: ${formData.title || "Untitled Project"}`);
-      const body = encodeURIComponent(
-        `=== NEW IDEA SUBMISSION ===\n\n` +
-        `From: ${formData.name}\n` +
-        `Email: ${formData.email}\n` +
-        `Type: ${formData.ideaType === "app" ? "App Idea" : "Problem to Solve"}\n\n` +
-        `Title: ${formData.title}\n\n` +
-        `Description:\n${formData.description}\n\n` +
-        `Problem Statement:\n${formData.problem}\n\n` +
-        `Target Audience:\n${formData.targetAudience}\n\n` +
-        `Budget Range: ${formData.budget}\n\n` +
-        `========================\n` +
-        `Let's bring this idea to life together!`
+      // Initialize EmailJS
+      emailjs.init('5eLu74wM2kSgwd6fT');
+
+      // Create detailed message for idea submission
+      const ideaMessage = `=== NEW IDEA SUBMISSION ===
+
+From: ${formData.name}
+Email: ${formData.email}
+Type: ${formData.ideaType === "app" ? "App Idea" : "Problem to Solve"}
+
+Title: ${formData.title}
+
+Description:
+${formData.description}
+
+Problem Statement:
+${formData.problem}
+
+Target Audience:
+${formData.targetAudience}
+
+Budget Range: ${formData.budget}
+
+========================
+Let's bring this idea to life together!`;
+
+      // Send idea submission email
+      const result = await emailjs.send(
+        'service_gk2ggy2',
+        'template_f6wbh0a',
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          to_name: 'Usama Javed',
+          to_email: 'hellofromusama@gmail.com',
+          subject: `💡 New Idea: ${formData.title || "Untitled Project"}`,
+          message: ideaMessage,
+          reply_to: formData.email,
+          time: new Date().toLocaleString()
+        }
       );
 
-      const mailtoLink = `mailto:hellofromusama@gmail.com?subject=${subject}&body=${body}`;
+      // Send auto-reply to idea submitter
+      try {
+        await emailjs.send(
+          'service_gk2ggy2',
+          'template_k0jvdur',
+          {
+            name: formData.name,
+            to_email: formData.email,
+            title: formData.title || "Your Idea Submission",
+            reply_to: 'hellofromusama@gmail.com'
+          }
+        );
+      } catch (autoReplyError) {
+        console.log('Auto-reply failed for idea submission:', autoReplyError);
+      }
 
-      // Create and click a temporary anchor element
-      const link = document.createElement('a');
-      link.href = mailtoLink;
-      link.target = '_blank';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      setSubmitStatus("success");
+      if (result.status === 200) {
+        setSubmitStatus("success");
+      } else {
+        throw new Error('Email sending failed');
+      }
       setTimeout(() => {
         setFormData({
           name: "",
@@ -71,8 +109,32 @@ export default function Ideas() {
         });
         setSubmitStatus("idle");
       }, 3000);
-    } catch {
+    } catch (error) {
+      console.error('EmailJS error:', error);
       setSubmitStatus("error");
+
+      // Fallback to mailto as backup
+      const subject = encodeURIComponent(`💡 New Idea: ${formData.title || "Untitled Project"}`);
+      const body = encodeURIComponent(
+        `=== NEW IDEA SUBMISSION ===\n\n` +
+        `From: ${formData.name}\n` +
+        `Email: ${formData.email}\n` +
+        `Type: ${formData.ideaType === "app" ? "App Idea" : "Problem to Solve"}\n\n` +
+        `Title: ${formData.title}\n\n` +
+        `Description:\n${formData.description}\n\n` +
+        `Problem Statement:\n${formData.problem}\n\n` +
+        `Target Audience:\n${formData.targetAudience}\n\n` +
+        `Budget Range: ${formData.budget}\n\n` +
+        `========================\n` +
+        `Let's bring this idea to life together!`
+      );
+      const mailtoLink = `mailto:hellofromusama@gmail.com?subject=${subject}&body=${body}`;
+      const link = document.createElement('a');
+      link.href = mailtoLink;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
     setIsSubmitting(false);
@@ -140,7 +202,7 @@ export default function Ideas() {
               <Link href="/ideas" className="text-purple-400">Ideas</Link>
               <Link href="/contact" className="hover:text-blue-400 transition-all duration-300">Contact</Link>
               <a
-                href="https://linkedin.com/in/usamajaved"
+                href="https://www.linkedin.com/in/hellofromusama/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
