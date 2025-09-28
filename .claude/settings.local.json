@@ -4,7 +4,13 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(vercel:*)"
+      "Bash(vercel:*)",
+      "Bash(npm run build:*)",
+      "WebSearch",
+      "WebFetch(domain:www.duckduckgo.com)",
+      "WebFetch(domain:search.google.com)",
+      "WebFetch(domain:support.google.com)",
+      "WebFetch(domain:vercel.com)"
     ],
     "deny": [],
     "ask": []
