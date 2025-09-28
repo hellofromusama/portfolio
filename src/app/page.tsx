@@ -118,6 +118,7 @@ export default function Home() {
               <Link href="/ideas" className="hover:text-purple-400 transition-all duration-300 hover:scale-105">Ideas</Link>
               <Link href="/contact" className="hover:text-blue-400 transition-all duration-300 hover:scale-105">Contact</Link>
               <Link href="/tech-stack" className="hover:text-blue-400 transition-all duration-300 hover:scale-105">Tech</Link>
+              <Link href="/ai-training" className="hover:text-purple-400 transition-all duration-300 hover:scale-105 text-purple-300">AI Training</Link>
               <a
                 href="https://wa.me/61433695387"
                 target="_blank"
@@ -183,6 +184,13 @@ export default function Home() {
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Tech
+                </Link>
+                <Link
+                  href="/ai-training"
+                  className="block text-lg hover:text-purple-400 transition-colors duration-300 py-2 text-purple-300"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  AI Training
                 </Link>
 
                 <div className="pt-4 border-t border-slate-700/50 space-y-3">
