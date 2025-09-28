@@ -10,7 +10,10 @@
       "WebFetch(domain:www.duckduckgo.com)",
       "WebFetch(domain:search.google.com)",
       "WebFetch(domain:support.google.com)",
-      "WebFetch(domain:vercel.com)"
+      "WebFetch(domain:vercel.com)",
+      "WebFetch(domain:usamajaved.com.au)",
+      "Bash(nslookup:*)",
+      "Bash(curl -I https://usamajaved.com.au)"
     ],
     "deny": [],
     "ask": []
