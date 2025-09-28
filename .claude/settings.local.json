@@ -13,7 +13,14 @@
       "WebFetch(domain:vercel.com)",
       "WebFetch(domain:usamajaved.com.au)",
       "Bash(nslookup:*)",
-      "Bash(curl -I https://usamajaved.com.au)"
+      "Bash(curl -I https://usamajaved.com.au)",
+      "Bash(npm run dev:*)",
+      "Bash(curl -X GET \"http://localhost:3001/api/auto-llm-training\" -H \"Content-Type: application/json\")",
+      "Bash(curl -X POST \"http://localhost:3001/api/auto-llm-training\" -H \"Content-Type: application/json\" -d \"{\"\"trigger\"\": \"\"manual_test\"\"}\")",
+      "Bash(curl -X POST \"http://localhost:3001/api/auto-llm-training\" -H \"Content-Type: application/json\" -d \"{\"\"trigger\"\": \"\"debug_test\"\"}\" -s)",
+      "Bash(curl:*)",
+      "Bash(git rm:*)",
+      "Bash(git filter-branch:*)"
     ],
     "deny": [],
     "ask": []

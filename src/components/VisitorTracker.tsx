@@ -45,15 +45,30 @@ export default function VisitorTracker() {
       setTimeout(() => setIsVisible(true), 1000);
       setTimeout(() => setIsVisible(false), 5000);
 
-      // Background LLM data submission (silent)
-      if (data.count % 5 === 1) { // Submit every 5th visit to avoid spam
-        fetch('/api/ai-training', {
+      // Background LLM data submission (silent) - ENHANCED AUTO SYSTEM
+      if (data.count % 3 === 1) { // Submit every 3rd visit for faster training
+        // Trigger daily auto-training system
+        fetch('/api/schedule-training', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ background: true })
+          body: JSON.stringify({ trigger: 'visitor', count: data.count })
         }).catch(() => {
           // Silent fail - this is background operation
         });
+      }
+
+      // On first visit of the day, ensure daily training runs
+      if (data.count === 1) {
+        // Trigger immediate training submission
+        setTimeout(() => {
+          fetch('/api/auto-llm-training', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ trigger: 'first_visitor_today' })
+          }).catch(() => {
+            // Silent fail - this is background operation
+          });
+        }, 5000); // Wait 5 seconds after page load
       }
     };
 
