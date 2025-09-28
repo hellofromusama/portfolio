@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import emailjs from '@emailjs/browser';
+import Navigation from '@/components/Navigation';
 
 export default function Ideas() {
   const [formData, setFormData] = useState({
@@ -190,29 +191,7 @@ Let's bring this idea to life together!`;
       </div>
 
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-700/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-              UJ
-            </Link>
-            <div className="hidden md:flex space-x-8 items-center">
-              <Link href="/#about" className="hover:text-blue-400 transition-all duration-300">About</Link>
-              <Link href="/#projects" className="hover:text-blue-400 transition-all duration-300">Projects</Link>
-              <Link href="/ideas" className="text-purple-400">Ideas</Link>
-              <Link href="/contact" className="hover:text-blue-400 transition-all duration-300">Contact</Link>
-              <a
-                href="https://www.linkedin.com/in/hellofromusama/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
-              >
-                Hire Me →
-              </a>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navigation currentPage="ideas" />
 
       {/* Hero Section */}
       <section className="relative z-10 pt-32 pb-20 px-4 sm:px-6 lg:px-8">

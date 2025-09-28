@@ -1,25 +1,34 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import Link from "next/link";
-import FAQ from "@/components/FAQ";
-import VisitorTracker from "@/components/VisitorTracker";
-import VisitorCounter from "@/components/VisitorCounter";
+import dynamic from "next/dynamic";
+
+// Lazy load heavy components
+const FAQ = dynamic(() => import("@/components/FAQ"), {
+  loading: () => <div className="animate-pulse bg-slate-800/30 h-96"></div>,
+  ssr: false
+});
+
+const VisitorTracker = dynamic(() => import("@/components/VisitorTracker"), {
+  ssr: false
+});
+
+const VisitorCounter = dynamic(() => import("@/components/VisitorCounter"), {
+  ssr: false
+});
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMouseTracking, setIsMouseTracking] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    // Only enable mouse tracking on desktop
+    if (window.innerWidth > 768) {
+      setIsMouseTracking(true);
+    }
   }, []);
 
   const projects = [
@@ -77,15 +86,12 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden">
       <VisitorTracker />
       <VisitorCounter />
-      {/* Animated Background */}
+
+      {/* Optimized Background - Only render mouse tracking on desktop */}
+      {isMouseTracking && <MouseBackground />}
+
+      {/* Static Background Elements */}
       <div className="fixed inset-0 z-0">
-        <div
-          className="absolute w-96 h-96 bg-blue-500/10 rounded-full blur-3xl transition-all duration-1000"
-          style={{
-            left: mousePosition.x - 192,
-            top: mousePosition.y - 192,
-          }}
-        />
         <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
@@ -94,9 +100,9 @@ export default function Home() {
       <nav className="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-700/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
               UJ
-            </div>
+            </Link>
 
             {/* Mobile menu button */}
             <div className="md:hidden">
@@ -121,7 +127,7 @@ export default function Home() {
               <a href="#skills" className="hover:text-blue-400 transition-all duration-300 hover:scale-105">Skills</a>
               <Link href="/ideas" className="hover:text-purple-400 transition-all duration-300 hover:scale-105">Ideas</Link>
               <Link href="/contact" className="hover:text-blue-400 transition-all duration-300 hover:scale-105">Contact</Link>
-              <Link href="/tech-stack" className="hover:text-blue-400 transition-all duration-300 hover:scale-105">Tech</Link>
+              <Link href="/budget" className="hover:text-green-400 transition-all duration-300 hover:scale-105">Budget</Link>
               <a
                 href="https://wa.me/61433695387"
                 target="_blank"
@@ -182,11 +188,11 @@ export default function Home() {
                   Contact
                 </Link>
                 <Link
-                  href="/tech-stack"
-                  className="block text-lg hover:text-blue-400 transition-colors duration-300 py-2"
+                  href="/budget"
+                  className="block text-lg hover:text-green-400 transition-colors duration-300 py-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Tech
+                  Budget Calculator
                 </Link>
 
                 <div className="pt-4 border-t border-slate-700/50 space-y-3">
@@ -301,7 +307,7 @@ export default function Home() {
             </div>
 
             <div className="space-y-6">
-              <div className="p-8 bg-gradient-to-r from-slate-900/80 to-slate-800/80 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-all duration-300 group">
+              <div className="p-8 bg-gradient-to-r from-slate-900/80 to-slate-800/80 rounded-xl border border-slate-700 hover:border-purple-500/50 transition-all duration-300 group">
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
                     <span className="text-2xl">🚀</span>
@@ -503,8 +509,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <FAQ />
+      {/* FAQ Section - Lazy Loaded */}
+      <Suspense fallback={<div className="animate-pulse bg-slate-800/30 h-96"></div>}>
+        <FAQ />
+      </Suspense>
 
       {/* Footer */}
       <footer className="relative z-10 py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-700/50">
@@ -539,6 +547,51 @@ export default function Home() {
           overflow: hidden;
         }
       `}</style>
+    </div>
+  );
+}
+
+// Separate component for mouse tracking background - only loaded on desktop
+function MouseBackground() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    let rafId: number;
+    let lastX = 0;
+    let lastY = 0;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      // Use requestAnimationFrame for smooth updates
+      if (rafId) cancelAnimationFrame(rafId);
+
+      rafId = requestAnimationFrame(() => {
+        const deltaX = Math.abs(e.clientX - lastX);
+        const deltaY = Math.abs(e.clientY - lastY);
+
+        // Only update if mouse moved significantly
+        if (deltaX > 5 || deltaY > 5) {
+          lastX = e.clientX;
+          lastY = e.clientY;
+          setMousePosition({ x: e.clientX, y: e.clientY });
+        }
+      });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
+
+  return (
+    <div className="fixed inset-0 z-0 pointer-events-none">
+      <div
+        className="absolute w-96 h-96 bg-blue-500/10 rounded-full blur-3xl transition-all duration-1000 will-change-transform"
+        style={{
+          transform: `translate3d(${mousePosition.x - 192}px, ${mousePosition.y - 192}px, 0)`,
+        }}
+      />
     </div>
   );
 }
