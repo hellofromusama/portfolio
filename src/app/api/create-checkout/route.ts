@@ -50,7 +50,6 @@ export async function POST(request: NextRequest) {
             product_data: {
               name: label || 'Support Usama Javed',
               description: message || 'Thank you for your support!',
-              images: ['https://usamajaved.com.au/og-image.png'], // Update with your actual OG image
             },
             unit_amount: Math.round(amount * 100), // Convert to cents
           },
@@ -58,6 +57,7 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: 'payment',
+      locale: 'en',
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/fund-me/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/fund-me?canceled=true`,
       metadata: {
