@@ -8,7 +8,7 @@ const getStripe = () => {
     return null;
   }
   return new Stripe(apiKey, {
-    apiVersion: '2024-12-18.acacia',
+    apiVersion: '2024-11-20.acacia',
   });
 };
 
