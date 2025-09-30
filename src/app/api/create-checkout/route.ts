@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-12-18.acacia',
-});
+// Initialize Stripe only if API key is available
+const getStripe = () => {
+  const apiKey = process.env.STRIPE_SECRET_KEY;
+  if (!apiKey || apiKey === 'your_stripe_secret_key_here' || apiKey === '') {
+    return null;
+  }
+  return new Stripe(apiKey, {
+    apiVersion: '2024-12-18.acacia',
+  });
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,10 +25,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if Stripe is configured
-    if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === 'your_stripe_secret_key_here') {
+    const stripe = getStripe();
+    if (!stripe) {
       return NextResponse.json(
-        { error: 'Stripe is not configured. Please set up your Stripe keys.' },
-        { status: 500 }
+        { error: 'Stripe is not configured. Please set up your Stripe keys in environment variables.' },
+        { status: 503 }
       );
     }
 
