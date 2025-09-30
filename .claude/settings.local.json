@@ -25,7 +25,9 @@
       "Bash(gh repo edit:*)",
       "Bash(echo $USERPROFILE)",
       "Read(//c/Users/Usama.Javed/Downloads/**)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(echo $VERCEL_TOKEN)",
+      "Bash(git fetch:*)"
     ],
     "deny": [],
     "ask": []
