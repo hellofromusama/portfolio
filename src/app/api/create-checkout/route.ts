@@ -3,11 +3,20 @@ import Stripe from 'stripe';
 
 // Initialize Stripe only if API key is available
 const getStripe = () => {
-  const apiKey = process.env.STRIPE_SECRET_KEY;
+  const apiKey = process.env.STRIPE_SECRET_KEY?.trim();
   if (!apiKey || apiKey === 'your_stripe_secret_key_here' || apiKey === '') {
+    console.error('Stripe API key is missing or invalid');
     return null;
   }
-  return new Stripe(apiKey);
+  console.log('Stripe API key found, initializing...');
+  try {
+    return new Stripe(apiKey, {
+      apiVersion: '2024-06-20',
+    });
+  } catch (error) {
+    console.error('Failed to initialize Stripe:', error);
+    return null;
+  }
 };
 
 export async function POST(request: NextRequest) {
@@ -61,6 +70,12 @@ export async function POST(request: NextRequest) {
 
   } catch (error: any) {
     console.error('Stripe checkout error:', error);
+    console.error('Error details:', {
+      type: error.type,
+      code: error.code,
+      statusCode: error.statusCode,
+      message: error.message,
+    });
     return NextResponse.json(
       { error: error.message || 'Failed to create checkout session' },
       { status: 500 }
