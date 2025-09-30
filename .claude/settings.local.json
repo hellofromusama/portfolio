@@ -27,7 +27,8 @@
       "Read(//c/Users/Usama.Javed/Downloads/**)",
       "Bash(git log:*)",
       "Bash(echo $VERCEL_TOKEN)",
-      "Bash(git fetch:*)"
+      "Bash(git fetch:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

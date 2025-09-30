@@ -7,9 +7,7 @@ const getStripe = () => {
   if (!apiKey || apiKey === 'your_stripe_secret_key_here' || apiKey === '') {
     return null;
   }
-  return new Stripe(apiKey, {
-    apiVersion: '2024-09-30.acacia',
-  });
+  return new Stripe(apiKey);
 };
 
 export async function POST(request: NextRequest) {
