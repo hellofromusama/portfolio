@@ -1,0 +1,63 @@
+import { NextRequest, NextResponse } from 'next/server';
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+  apiVersion: '2024-12-18.acacia',
+});
+
+export async function POST(request: NextRequest) {
+  try {
+    const { amount, label, message } = await request.json();
+
+    // Validate amount
+    if (!amount || amount < 1) {
+      return NextResponse.json(
+        { error: 'Invalid amount. Minimum is $1 AUD.' },
+        { status: 400 }
+      );
+    }
+
+    // Check if Stripe is configured
+    if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === 'your_stripe_secret_key_here') {
+      return NextResponse.json(
+        { error: 'Stripe is not configured. Please set up your Stripe keys.' },
+        { status: 500 }
+      );
+    }
+
+    // Create Stripe Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'aud',
+            product_data: {
+              name: label || 'Support Usama Javed',
+              description: message || 'Thank you for your support!',
+              images: ['https://usamajaved.com.au/og-image.png'], // Update with your actual OG image
+            },
+            unit_amount: Math.round(amount * 100), // Convert to cents
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/fund-me/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/fund-me?canceled=true`,
+      metadata: {
+        label: label || 'Custom Donation',
+        message: message || '',
+      },
+    });
+
+    return NextResponse.json({ url: session.url });
+
+  } catch (error: any) {
+    console.error('Stripe checkout error:', error);
+    return NextResponse.json(
+      { error: error.message || 'Failed to create checkout session' },
+      { status: 500 }
+    );
+  }
+}

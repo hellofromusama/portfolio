@@ -218,15 +218,35 @@ Let's bring this idea to life together!`;
       {/* Idea Categories */}
       <section className="relative z-10 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 bg-clip-text text-transparent animate-gradient-x">
+              What Can We Build Together?
+            </h2>
+            <p className="text-slate-400 text-lg">Choose your category and let's get started</p>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-16">
             {ideas.map((idea, index) => (
               <div
                 key={index}
-                className="group p-6 bg-slate-900/50 rounded-xl border border-slate-700 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 hover:bg-purple-900/20"
+                className="group relative p-6 bg-gradient-to-br from-slate-900/80 to-purple-900/20 rounded-xl border border-slate-700 hover:border-purple-500 transition-all duration-500 hover:scale-110 hover:rotate-2 hover:shadow-2xl hover:shadow-purple-500/50 cursor-pointer overflow-hidden"
+                style={{
+                  animationDelay: `${index * 100}ms`
+                }}
               >
-                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">{idea.icon}</div>
-                <h3 className="text-sm font-semibold text-purple-300 mb-1">{idea.title}</h3>
-                <p className="text-xs text-slate-400">{idea.desc}</p>
+                {/* Sparkle effect on hover */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute top-2 right-2 w-2 h-2 bg-yellow-400 rounded-full animate-ping"></div>
+                  <div className="absolute bottom-2 left-2 w-2 h-2 bg-pink-400 rounded-full animate-ping delay-300"></div>
+                </div>
+
+                {/* Gradient overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 transition-all duration-500 rounded-xl"></div>
+
+                <div className="relative z-10">
+                  <div className="text-4xl mb-3 group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">{idea.icon}</div>
+                  <h3 className="text-sm font-semibold text-purple-300 group-hover:text-pink-300 mb-1 transition-colors duration-300">{idea.title}</h3>
+                  <p className="text-xs text-slate-400 group-hover:text-slate-300 transition-colors duration-300">{idea.desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -445,12 +465,36 @@ Let's bring this idea to life together!`;
           50% { transform: translateY(-10px); }
         }
 
+        @keyframes gradient-x {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+
+        @keyframes pulse-glow {
+          0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); }
+          50% { box-shadow: 0 0 40px rgba(236, 72, 153, 0.6); }
+        }
+
         .animate-float {
           animation: float 20s ease-in-out infinite;
         }
 
         .animate-bounce-slow {
           animation: bounce-slow 2s ease-in-out infinite;
+        }
+
+        .animate-gradient-x {
+          background-size: 200% 200%;
+          animation: gradient-x 3s ease infinite;
+        }
+
+        .delay-300 {
+          animation-delay: 300ms;
         }
       `}</style>
     </div>

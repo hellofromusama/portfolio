@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -10,7 +10,19 @@ interface NavigationProps {
 
 export default function Navigation({ currentPage }: NavigationProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
 
   const isActivePage = (path: string) => {
     if (path === '/' && pathname === '/') return true;
@@ -23,14 +35,18 @@ export default function Navigation({ currentPage }: NavigationProps) {
     { href: '/ideas', label: 'Ideas', color: 'text-purple-400' },
     { href: '/contact', label: 'Contact', color: 'text-blue-400' },
     { href: '/budget', label: 'Budget', color: 'text-green-400' },
+    { href: '/fund-me', label: '💖 Fund Me', color: 'text-pink-400' },
   ];
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-700/50">
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-slate-900/95 backdrop-blur-lg border-b-2 border-blue-500/50 shadow-lg shadow-blue-500/20' : 'bg-slate-900/80 backdrop-blur-md border-b border-slate-700/50'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            UJ
+          <Link href="/" className="group text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent hover:scale-110 transition-transform duration-300">
+            <span className="relative">
+              UJ
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 group-hover:w-full transition-all duration-300"></span>
+            </span>
           </Link>
 
           {/* Mobile menu button */}
@@ -56,13 +72,14 @@ export default function Navigation({ currentPage }: NavigationProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`transition-all duration-300 hover:scale-105 ${
+                className={`group relative transition-all duration-300 hover:scale-105 ${
                   isActivePage(item.href)
                     ? `${item.color} font-semibold`
-                    : `hover:${item.color}`
+                    : `text-slate-300 hover:${item.color}`
                 }`}
               >
                 {item.label}
+                <span className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 ${isActivePage(item.href) ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
               </Link>
             ))}
 
@@ -97,7 +114,7 @@ export default function Navigation({ currentPage }: NavigationProps) {
 
         {/* Mobile menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-slate-900/95 backdrop-blur-md border-t border-slate-700/50">
+          <div className="md:hidden bg-slate-900/95 backdrop-blur-md border-t border-slate-700/50 animate-slide-down">
             <div className="px-4 py-6 space-y-4">
               {navItems.map((item) => (
                 <Link
@@ -165,6 +182,24 @@ export default function Navigation({ currentPage }: NavigationProps) {
           </div>
         )}
       </div>
+
+      {/* CSS Animations */}
+      <style jsx>{`
+        @keyframes slide-down {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-slide-down {
+          animation: slide-down 0.3s ease-out;
+        }
+      `}</style>
     </nav>
   );
 }

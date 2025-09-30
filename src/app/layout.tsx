@@ -1,15 +1,23 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import FundMeWidget from "@/components/FundMeWidget";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'arial'],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: 'swap',
+  preload: true,
+  fallback: ['ui-monospace', 'monospace'],
 });
 
 export const metadata: Metadata = {
@@ -19,6 +27,19 @@ export const metadata: Metadata = {
     template: '%s | Usama Javed - Perth&apos;s Leading Developer'
   },
   description: 'Perth&apos;s #1 Full Stack Developer with 8+ years expertise. Next.js 15, React 19, AI integration specialist. 50+ successful projects. Enterprise solutions, government contractor, mining industry expert. Immediate availability, free consultation. Serving Perth, WA & Australia-wide.',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+    viewportFit: 'cover',
+  },
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f172a' }
+  ],
+  colorScheme: 'dark light',
+  manifest: '/manifest.json',
   keywords: [
     'Usama Javed Perth',
     '#1 Full Stack Developer Perth',
@@ -207,7 +228,7 @@ export default function RootLayout({
       addressCountry: 'AU',
       postalCode: '6000'
     },
-    email: 'contact@usamajaved.com',
+    email: 'hellofromusama@gmail.com',
     telephone: '+61-XXX-XXX-XXX',
     knowsAbout: [
       'Web Development',
@@ -247,7 +268,7 @@ export default function RootLayout({
     description: 'Professional web development and software engineering services in Perth, Western Australia',
     url: 'https://usamajaved.com',
     telephone: '+61-XXX-XXX-XXX',
-    email: 'contact@usamajaved.com',
+    email: 'hellofromusama@gmail.com',
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Perth CBD',
@@ -342,9 +363,13 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
-        {children}
+        <div className="flex-1">
+          {children}
+        </div>
+        <Footer />
+        <FundMeWidget />
       </body>
     </html>
   );

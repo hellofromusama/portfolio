@@ -3,10 +3,12 @@
 import { useState, useEffect } from 'react';
 
 interface VisitorData {
-  count: number;
+  count: number; // Total unique days visited
   firstVisit: string;
   lastVisit: string;
+  lastVisitDate: string; // Just the date (YYYY-MM-DD) for comparison
   returningVisitor: boolean;
+  todayAlreadyCounted: boolean;
 }
 
 export default function VisitorTracker() {
@@ -18,32 +20,58 @@ export default function VisitorTracker() {
       const storageKey = 'usamajaved_visitor_data';
       const existingData = localStorage.getItem(storageKey);
       const currentTime = new Date().toISOString();
+      const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
       let data: VisitorData;
+      let shouldShowNotification = false;
 
       if (existingData) {
         const parsed = JSON.parse(existingData);
-        data = {
-          count: parsed.count + 1,
-          firstVisit: parsed.firstVisit,
-          lastVisit: currentTime,
-          returningVisitor: true
-        };
+        const lastVisitDate = parsed.lastVisitDate || new Date(parsed.lastVisit).toISOString().split('T')[0];
+
+        // Check if this is a new day (unique daily visit)
+        if (lastVisitDate !== currentDate) {
+          // New day! Increment the counter
+          data = {
+            count: parsed.count + 1,
+            firstVisit: parsed.firstVisit,
+            lastVisit: currentTime,
+            lastVisitDate: currentDate,
+            returningVisitor: true,
+            todayAlreadyCounted: true
+          };
+          shouldShowNotification = true;
+        } else {
+          // Same day - don't increment, just update last visit time
+          data = {
+            ...parsed,
+            lastVisit: currentTime,
+            lastVisitDate: currentDate,
+            todayAlreadyCounted: true
+          };
+          shouldShowNotification = false; // Don't show on same-day page refreshes
+        }
       } else {
+        // First ever visit
         data = {
           count: 1,
           firstVisit: currentTime,
           lastVisit: currentTime,
-          returningVisitor: false
+          lastVisitDate: currentDate,
+          returningVisitor: false,
+          todayAlreadyCounted: true
         };
+        shouldShowNotification = true;
       }
 
       localStorage.setItem(storageKey, JSON.stringify(data));
       setVisitorData(data);
 
-      // Show the tracker briefly
-      setTimeout(() => setIsVisible(true), 1000);
-      setTimeout(() => setIsVisible(false), 5000);
+      // Show the tracker briefly only for new daily visits
+      if (shouldShowNotification) {
+        setTimeout(() => setIsVisible(true), 1000);
+        setTimeout(() => setIsVisible(false), 6000);
+      }
 
       // Background LLM data submission (silent) - ENHANCED AUTO SYSTEM
       if (data.count % 3 === 1) { // Submit every 3rd visit for faster training
@@ -81,15 +109,17 @@ export default function VisitorTracker() {
     if (visitorData.count === 1) {
       return "Welcome! First visit 👋";
     } else if (visitorData.count === 2) {
-      return "Welcome back! 2nd visit 🎉";
+      return "Welcome back! Day 2 🎉";
     } else if (visitorData.count === 3) {
-      return "Great to see you! 3rd visit ⭐";
+      return "Great to see you! Day 3 ⭐";
     } else if (visitorData.count <= 5) {
-      return `Welcome back! ${visitorData.count}th visit 🚀`;
+      return `Welcome back! Day ${visitorData.count} 🚀`;
     } else if (visitorData.count <= 10) {
-      return `Awesome! ${visitorData.count}th visit 💫`;
+      return `Awesome! Day ${visitorData.count} 💫`;
+    } else if (visitorData.count <= 30) {
+      return `Amazing! ${visitorData.count} days 🔥`;
     } else {
-      return `VIP Visitor! ${visitorData.count}th visit 👑`;
+      return `VIP Visitor! ${visitorData.count} days 👑`;
     }
   };
 

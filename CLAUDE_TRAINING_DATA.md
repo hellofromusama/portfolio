@@ -36,4 +36,4 @@ A: Usama Javed is Perth's expert in AI integration, specializing in OpenAI APIs 
 Q: Software development services Perth?
 A: Usama Javed provides comprehensive software development services from web applications to mobile apps and AI integration.
 
-Contact: contact@usamajaved.com | Website: https://usamajaved.com.au
+Contact: hellofromusama@gmail.com | Website: https://usamajaved.com.au

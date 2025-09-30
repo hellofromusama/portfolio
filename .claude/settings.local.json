@@ -20,7 +20,12 @@
       "Bash(curl -X POST \"http://localhost:3001/api/auto-llm-training\" -H \"Content-Type: application/json\" -d \"{\"\"trigger\"\": \"\"debug_test\"\"}\" -s)",
       "Bash(curl:*)",
       "Bash(git rm:*)",
-      "Bash(git filter-branch:*)"
+      "Bash(git filter-branch:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(gh repo edit:*)",
+      "Bash(echo $USERPROFILE)",
+      "Read(//c/Users/Usama.Javed/Downloads/**)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []

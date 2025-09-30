@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import emailjs from '@emailjs/browser';
 import Navigation from '@/components/Navigation';
@@ -15,6 +15,11 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [copied, setCopied] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,27 +104,38 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
-      <Navigation currentPage="contact" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl animate-pulse delay-2000"></div>
+      </div>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-            Get In Touch
-          </h1>
-          <p className="text-2xl text-slate-300 mb-16">
-            Let&apos;s discuss your project and bring your ideas to life
-          </p>
-        </div>
-      </section>
+      <div className="relative z-10">
+        <Navigation currentPage="contact" />
+
+        {/* Hero Section */}
+        <section className={`pt-32 pb-20 px-4 sm:px-6 lg:px-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-block mb-6 animate-bounce-slow">
+              <span className="text-6xl">✉️</span>
+            </div>
+            <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">
+              Get In Touch
+            </h1>
+            <p className="text-2xl text-slate-300 mb-16">
+              Let&apos;s discuss your project and bring your ideas to life
+            </p>
+          </div>
+        </section>
 
       {/* Contact Form & Info */}
       <section className="pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16">
             {/* Contact Form */}
-            <div className="bg-slate-900/50 p-8 rounded-2xl border border-slate-700">
+            <div className={`bg-slate-900/50 p-8 rounded-2xl border border-slate-700 hover:border-blue-500/50 transition-all duration-700 hover:shadow-2xl hover:shadow-blue-500/20 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`} style={{transitionDelay: '200ms'}}>
               <h2 className="text-3xl font-bold mb-8 text-blue-400">Send a Message</h2>
 
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -233,7 +249,7 @@ export default function Contact() {
             </div>
 
             {/* Contact Info */}
-            <div className="space-y-8">
+            <div className={`space-y-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`} style={{transitionDelay: '400ms'}}>
               <div>
                 <h2 className="text-3xl font-bold mb-8 text-purple-400">Let&apos;s Connect</h2>
                 <p className="text-slate-300 text-lg leading-relaxed mb-8">
@@ -244,7 +260,7 @@ export default function Contact() {
               </div>
 
               <div className="space-y-6">
-                <div className="flex items-center justify-between p-6 bg-slate-900/50 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-all duration-300">
+                <div className="flex items-center justify-between p-6 bg-slate-900/50 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20">
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
                       <span className="text-2xl">✉️</span>
@@ -268,7 +284,7 @@ export default function Contact() {
                   </button>
                 </div>
 
-                <div className="flex items-center space-x-4 p-6 bg-slate-900/50 rounded-xl border border-slate-700 hover:border-purple-500/50 transition-all duration-300">
+                <div className="flex items-center space-x-4 p-6 bg-slate-900/50 rounded-xl border border-slate-700 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/20">
                   <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
                     <span className="text-2xl">💼</span>
                   </div>
@@ -285,7 +301,7 @@ export default function Contact() {
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4 p-6 bg-slate-900/50 rounded-xl border border-slate-700 hover:border-green-500/50 transition-all duration-300">
+                <div className="flex items-center space-x-4 p-6 bg-slate-900/50 rounded-xl border border-slate-700 hover:border-green-500/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-green-500/20">
                   <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
                     <span className="text-2xl">👨‍💻</span>
                   </div>
@@ -302,7 +318,7 @@ export default function Contact() {
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4 p-6 bg-slate-900/50 rounded-xl border border-slate-700 hover:border-yellow-500/50 transition-all duration-300">
+                <div className="flex items-center space-x-4 p-6 bg-slate-900/50 rounded-xl border border-slate-700 hover:border-yellow-500/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-yellow-500/20">
                   <div className="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
                     <span className="text-2xl">📍</span>
                   </div>
@@ -324,6 +340,37 @@ export default function Contact() {
           </div>
         </div>
       </section>
+      </div>
+
+      {/* CSS Animations */}
+      <style jsx>{`
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+
+        @keyframes gradient {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+
+        .animate-bounce-slow {
+          animation: bounce-slow 2s ease-in-out infinite;
+        }
+
+        .animate-gradient {
+          background-size: 200% 200%;
+          animation: gradient 3s ease infinite;
+        }
+
+        .delay-1000 {
+          animation-delay: 1s;
+        }
+
+        .delay-2000 {
+          animation-delay: 2s;
+        }
+      `}</style>
     </div>
   );
 }

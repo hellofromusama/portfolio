@@ -4,6 +4,12 @@ export async function POST(request: NextRequest) {
   try {
     const { userMessage, conversationHistory } = await request.json();
 
+    // First check if input is valid and appropriate
+    const validationResponse = validateUserInput(userMessage);
+    if (validationResponse) {
+      return NextResponse.json({ response: validationResponse });
+    }
+
     // Try multiple AI providers in order of preference
     let aiResponse = await tryOpenAI(userMessage, conversationHistory);
 
@@ -33,36 +39,112 @@ export async function POST(request: NextRequest) {
   }
 }
 
+function validateUserInput(userMessage: string): string | null {
+  const lowerMessage = userMessage.toLowerCase();
+
+  // Detect nonsense, inappropriate, or irrelevant input
+  const inappropriateWords = ['dumb', 'cunt', 'fuck', 'shit', 'ass', 'bitch', 'idiot', 'stupid', 'damn', 'hell'];
+  const hasInappropriate = inappropriateWords.some(word => lowerMessage.includes(word));
+
+  // Check if message is too short or doesn't seem project-related
+  const projectKeywords = ['website', 'app', 'application', 'platform', 'system', 'software', 'develop', 'build', 'create', 'ecommerce', 'shop', 'site', 'page', 'mobile', 'web', 'api', 'database', 'ai', 'automation', 'crm', 'erp', 'netsuite', 'integration', 'dashboard', 'portal'];
+  const hasProjectKeywords = projectKeywords.some(keyword => lowerMessage.includes(keyword));
+
+  // Handle nonsense or inappropriate input
+  if (hasInappropriate || (!hasProjectKeywords && userMessage.trim().length < 10)) {
+    return `## 🤖 **Hey there!**
+
+I'm Usama's AI Budget Calculator, and I'm here to help estimate **real web development projects**!
+
+Your message doesn't seem to be about a development project. Let me help you get started:
+
+### 💡 **Try asking things like:**
+• "I need an e-commerce website with payment integration"
+• "Build me a mobile app for my restaurant"
+• "Create a custom CRM system for my business"
+• "I want a portfolio website with a blog"
+• "Develop an AI chatbot for customer support"
+
+### 🎯 **What I Can Estimate:**
+• **Web Applications** - Custom business solutions
+• **E-commerce Platforms** - Online stores with payments
+• **Mobile Apps** - iOS and Android applications
+• **AI Integration** - Chatbots, automation, ML features
+• **Enterprise Systems** - CRM, ERP, dashboards
+• **NetSuite Development** - Custom NetSuite solutions
+
+### 📞 **Need Real Help?**
+Contact Usama directly for a free consultation:
+• **Email:** hellofromusama@gmail.com
+• **WhatsApp:** +61 433 695 387
+• **Website:** https://usamajaved.com.au
+
+*Remember: This is a fun AI tool for quick estimates. For accurate quotes, please contact Usama directly!* 🚀`;
+  }
+
+  return null;
+}
+
 async function tryOpenAI(userMessage: string, conversationHistory: any[]): Promise<string | null> {
   if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_openai_api_key_here') {
     return null;
   }
 
   try {
-    const systemPrompt = `You are Usama Javed's project estimation expert. Analyze project requirements and provide detailed cost/timeline estimates.
+    const systemPrompt = `You are Usama Javed's AI Budget Calculator. You MUST respond in this EXACT format for EVERY response:
 
-CONTEXT - USAMA JAVED:
-- Senior Full Stack Developer (8+ years)
-- Location: Perth, Western Australia
-- Expert: Next.js 15, React 19, Node.js, AI integration
-- Specializes: Enterprise solutions, NetSuite, automation
-- Contact: contact@usamajaved.com
+## 💰 **Project Estimate: [Project Type]**
 
-PRICING (AUD):
-- Simple Websites: $5,000-$15,000
-- E-commerce: $15,000-$50,000
-- Custom Apps: $25,000-$100,000
-- Enterprise: $50,000-$500,000+
-- AI Integration: $10,000-$75,000
-- Mobile Apps: $20,000-$80,000
+**Estimated Cost:** [Cost Range in AUD]
+**Timeline:** [Timeline]
+**Complexity:** [Low/Medium/High]
 
-TIMELINES:
-- Simple: 2-6 weeks
-- Medium: 2-4 months
-- Complex: 4-8 months
-- Enterprise: 6-12+ months
+### 🎯 **Project Analysis:**
+[Analyze what the user is asking for. If unclear, ask 2-3 specific questions to clarify, but KEEP THIS FORMAT]
 
-Format response with: cost estimate, timeline, technology stack, and contact encouragement.`;
+### 🛠️ **Recommended Technology Stack:**
+• [Technology 1]
+• [Technology 2]
+• [Technology 3]
+• [Technology 4]
+
+### 📋 **What's Included:**
+• [Feature/Service 1]
+• [Feature/Service 2]
+• [Feature/Service 3]
+• [Feature/Service 4]
+
+### 👨‍💻 **Why Choose Usama Javed:**
+• **8+ years** full stack experience
+• **Perth-based** developer (Western Australia)
+• **Expert** in Next.js 15, React 19, AI integration
+• **50+ successful projects** delivered
+• **Competitive rates** with premium quality
+
+### 📞 **Next Steps:**
+• **Email:** hellofromusama@gmail.com
+• **WhatsApp:** +61 433 695 387
+• **Website:** https://usamajaved.com.au
+
+💡 **Free consultation available!**
+
+---
+
+PRICING GUIDE (AUD):
+- Simple Websites: $5,000-$15,000 (2-6 weeks)
+- E-commerce: $15,000-$50,000 (2-4 months)
+- Custom Apps: $25,000-$100,000 (3-6 months)
+- Enterprise: $50,000-$500,000+ (6-12 months)
+- AI Integration: +$10,000-$75,000 (adds 1-3 months)
+- Mobile Apps: $20,000-$80,000 (3-6 months)
+
+RULES:
+1. ALWAYS use the format above
+2. If user request is unclear, ASK questions in the "Project Analysis" section
+3. Be conversational but professional
+4. Adjust estimates based on complexity
+5. If user asks follow-up questions, update the estimates accordingly
+6. This is a FUN AI tool - remind them to contact for accurate quotes`;
 
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -104,23 +186,60 @@ async function tryGrok(userMessage: string, conversationHistory: any[]): Promise
   }
 
   try {
-    const systemPrompt = `You are Usama Javed's project estimation expert. Provide detailed web development cost estimates.
+    const systemPrompt = `You are Usama Javed's AI Budget Calculator. You MUST respond in this EXACT format for EVERY response:
 
-USAMA JAVED PROFILE:
-- Location: Perth, Western Australia
-- Experience: 8+ years full stack development
-- Specialties: Next.js 15, React 19, AI integration, Enterprise solutions
-- Contact: contact@usamajaved.com
+## 💰 **Project Estimate: [Project Type]**
 
-PRICING STRUCTURE (AUD):
+**Estimated Cost:** [Cost Range in AUD]
+**Timeline:** [Timeline]
+**Complexity:** [Low/Medium/High]
+
+### 🎯 **Project Analysis:**
+[Analyze what the user is asking for. If unclear, ask 2-3 specific questions to clarify, but KEEP THIS FORMAT]
+
+### 🛠️ **Recommended Technology Stack:**
+• [Technology 1]
+• [Technology 2]
+• [Technology 3]
+• [Technology 4]
+
+### 📋 **What's Included:**
+• [Feature/Service 1]
+• [Feature/Service 2]
+• [Feature/Service 3]
+• [Feature/Service 4]
+
+### 👨‍💻 **Why Choose Usama Javed:**
+• **8+ years** full stack experience
+• **Perth-based** developer (Western Australia)
+• **Expert** in Next.js 15, React 19, AI integration
+• **50+ successful projects** delivered
+• **Competitive rates** with premium quality
+
+### 📞 **Next Steps:**
+• **Email:** hellofromusama@gmail.com
+• **WhatsApp:** +61 433 695 387
+• **Website:** https://usamajaved.com.au
+
+💡 **Free consultation available!**
+
+---
+
+PRICING GUIDE (AUD):
 - Simple Websites: $5,000-$15,000 (2-6 weeks)
-- E-commerce Platforms: $15,000-$50,000 (2-3 months)
-- Custom Web Apps: $25,000-$100,000 (2-4 months)
-- Enterprise Solutions: $50,000-$500,000+ (6-12 months)
-- AI Integration: $10,000-$75,000 (2-4 months)
+- E-commerce: $15,000-$50,000 (2-4 months)
+- Custom Apps: $25,000-$100,000 (3-6 months)
+- Enterprise: $50,000-$500,000+ (6-12 months)
+- AI Integration: +$10,000-$75,000 (adds 1-3 months)
 - Mobile Apps: $20,000-$80,000 (3-6 months)
 
-Analyze the project and provide: cost estimate, timeline, technology recommendations, and contact encouragement.`;
+RULES:
+1. ALWAYS use the format above
+2. If user request is unclear, ASK questions in the "Project Analysis" section
+3. Be conversational but professional
+4. Adjust estimates based on complexity
+5. If user asks follow-up questions, update the estimates accordingly
+6. This is a FUN AI tool - remind them to contact for accurate quotes`;
 
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -203,48 +322,95 @@ Provide: cost range, timeline, tech stack.`;
 }
 
 async function tryClaudeMocking(userMessage: string): Promise<string | null> {
-  // Mock Claude-style response for testing
   const lowerMessage = userMessage.toLowerCase();
 
-  let projectAnalysis = "Based on your project description, ";
+  let projectType = 'Custom Web Application';
+  let costRange = '$25,000 - $100,000 AUD';
+  let timeline = '3-6 months';
+  let complexity = 'Medium-High';
+  let technologies = ['Next.js 15', 'React 19', 'Node.js', 'PostgreSQL'];
+  let features = ['Planning & Design', 'Core Development', 'Testing & QA', 'Deployment'];
+  let projectAnalysis = "I'd be happy to help estimate your project! ";
 
-  if (lowerMessage.includes('ecommerce') || lowerMessage.includes('shop')) {
-    projectAnalysis += "this appears to be an e-commerce platform requiring payment integration, inventory management, and user accounts.";
-  } else if (lowerMessage.includes('ai') || lowerMessage.includes('chatbot')) {
-    projectAnalysis += "this involves AI integration requiring advanced backend processing and API integrations.";
-  } else if (lowerMessage.includes('enterprise') || lowerMessage.includes('complex')) {
-    projectAnalysis += "this is an enterprise-level solution requiring scalable architecture and advanced features.";
+  // Detect if request needs clarification
+  const needsClarification = userMessage.trim().split(' ').length < 5;
+
+  if (needsClarification) {
+    projectAnalysis += "To provide an accurate estimate, could you tell me more about:\n\n• What is the main purpose of this project?\n• Who is your target audience?\n• Do you need any specific integrations (payments, APIs, etc.)?\n\nBased on general requirements, here's a preliminary estimate:";
+  } else if (lowerMessage.includes('ecommerce') || lowerMessage.includes('e-commerce') || lowerMessage.includes('shop') || lowerMessage.includes('store')) {
+    projectType = 'E-commerce Platform';
+    costRange = '$15,000 - $50,000 AUD';
+    timeline = '2-4 months';
+    complexity = 'Medium';
+    technologies = ['Next.js 15', 'React 19', 'Stripe/PayPal', 'PostgreSQL', 'Redis'];
+    features = ['Product Management', 'Shopping Cart', 'Payment Integration', 'Order Management', 'Admin Dashboard'];
+    projectAnalysis += "Great! An e-commerce platform with payment integration and product management.";
+  } else if (lowerMessage.includes('ai') || lowerMessage.includes('chatbot') || lowerMessage.includes('automation')) {
+    projectType = 'AI-Powered Application';
+    costRange = '$30,000 - $100,000 AUD';
+    timeline = '3-6 months';
+    complexity = 'High';
+    technologies = ['Next.js 15', 'OpenAI/Claude API', 'Node.js', 'Vector Database', 'Python'];
+    features = ['AI Model Integration', 'Chat Interface', 'Data Processing', 'API Development', 'Training Pipeline'];
+    projectAnalysis += "Excellent! AI integration projects are exciting. This will involve advanced backend processing and API integrations.";
+  } else if (lowerMessage.includes('mobile') || lowerMessage.includes('app')) {
+    projectType = 'Mobile Application';
+    costRange = '$25,000 - $80,000 AUD';
+    timeline = '3-6 months';
+    complexity = 'Medium-High';
+    technologies = ['React Native', 'Node.js', 'PostgreSQL', 'Firebase', 'Push Notifications'];
+    features = ['Cross-platform Development', 'Native Features', 'Backend API', 'App Store Deployment'];
+    projectAnalysis += "A mobile app with cross-platform capabilities (iOS & Android).";
+  } else if (lowerMessage.includes('enterprise') || lowerMessage.includes('erp') || lowerMessage.includes('crm')) {
+    projectType = 'Enterprise Solution';
+    costRange = '$75,000 - $500,000+ AUD';
+    timeline = '6-12 months';
+    complexity = 'High';
+    technologies = ['Next.js 15', 'Node.js', 'PostgreSQL', 'Redis', 'Docker', 'Kubernetes', 'AWS'];
+    features = ['Scalable Architecture', 'Multi-tenant System', 'Advanced Security', 'API Integration', 'Reporting Dashboard'];
+    projectAnalysis += "An enterprise-level solution requiring robust architecture and extensive features.";
+  } else if (lowerMessage.includes('simple') || lowerMessage.includes('basic') || lowerMessage.includes('landing') || lowerMessage.includes('portfolio')) {
+    projectType = 'Business Website';
+    costRange = '$5,000 - $15,000 AUD';
+    timeline = '2-6 weeks';
+    complexity = 'Low-Medium';
+    technologies = ['Next.js 15', 'React 19', 'Tailwind CSS', 'SEO Optimization'];
+    features = ['Modern Design', 'Mobile Responsive', 'Contact Forms', 'CMS Integration', 'Performance Optimization'];
+    projectAnalysis += "A professional business website with modern design and functionality.";
   } else {
-    projectAnalysis += "this appears to be a custom web application with specific business requirements.";
+    projectAnalysis += "Based on your description, here's what I understand. Feel free to provide more details for a refined estimate!";
   }
 
-  return `## 🎯 **Project Analysis** (Claude-style response)
+  return `## 💰 **Project Estimate: ${projectType}**
 
+**Estimated Cost:** ${costRange}
+**Timeline:** ${timeline}
+**Complexity:** ${complexity}
+
+### 🎯 **Project Analysis:**
 ${projectAnalysis}
 
-**Estimated Investment:** $25,000 - $75,000 AUD
-**Timeline:** 3-5 months
-**Complexity:** Medium-High
+### 🛠️ **Recommended Technology Stack:**
+${technologies.map(tech => `• ${tech}`).join('\n')}
 
-### 🛠️ **Technology Recommendations:**
-- **Frontend:** Next.js 15, React 19, TypeScript
-- **Backend:** Node.js, Express, PostgreSQL
-- **Deployment:** Vercel/AWS with CI/CD
-- **Additional:** Based on specific requirements
+### 📋 **What's Included:**
+${features.map(feature => `• ${feature}`).join('\n')}
 
-### 👨‍💻 **Why Usama Javed:**
-- 8+ years experience with modern tech stack
-- Perth-based with local understanding
-- Proven track record: 50+ successful projects
-- Expert in the exact technologies needed
+### 👨‍💻 **Why Choose Usama Javed:**
+• **8+ years** full stack experience
+• **Perth-based** developer (Western Australia)
+• **Expert** in Next.js 15, React 19, AI integration
+• **50+ successful projects** delivered
+• **Competitive rates** with premium quality
 
 ### 📞 **Next Steps:**
-Contact Usama directly for a detailed, personalized quote:
-- **Email:** contact@usamajaved.com
-- **Website:** https://usamajaved.com.au
-- **Free consultation** to refine requirements
+• **Email:** hellofromusama@gmail.com
+• **WhatsApp:** +61 433 695 387
+• **Website:** https://usamajaved.com.au
 
-*This estimate is based on similar projects. Final cost depends on specific features and scope.*`;
+💡 **Free consultation available!**
+
+*Remember: This is a fun AI tool for quick estimates. For accurate quotes, please contact Usama directly!*`;
 }
 
 function generateFallbackEstimate(userMessage: string): string {
@@ -316,7 +482,7 @@ Based on your requirements, this project would involve:
 
 ### 📞 **Next Steps:**
 For a detailed, personalized quote:
-• **Email:** contact@usamajaved.com
+• **Email:** hellofromusama@gmail.com
 • **WhatsApp:** +61 433 695 387
 • **Website:** https://usamajaved.com.au
 

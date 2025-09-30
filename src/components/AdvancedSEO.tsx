@@ -117,7 +117,7 @@ export default function AdvancedSEO({
       "postalCode": "6000"
     },
     "telephone": "Available upon request",
-    "email": "contact@usamajaved.com",
+    "email": "hellofromusama@gmail.com",
     "availableLanguage": ["English"],
     "nationality": "Australian",
     "birthPlace": "Australia",
@@ -151,7 +151,7 @@ export default function AdvancedSEO({
     "description": "Expert web development and software engineering services in Perth, Western Australia",
     "url": siteUrl,
     "telephone": "+61-XXX-XXX-XXX",
-    "email": "contact@usamajaved.com",
+    "email": "hellofromusama@gmail.com",
     "founder": {
       "@type": "Person",
       "name": "Usama Javed"
@@ -351,8 +351,8 @@ export default function AdvancedSEO({
       <meta name="category" content="Technology Services" />
 
       {/* Contact Information */}
-      <meta name="contact" content="contact@usamajaved.com" />
-      <meta name="reply-to" content="contact@usamajaved.com" />
+      <meta name="contact" content="hellofromusama@gmail.com" />
+      <meta name="reply-to" content="hellofromusama@gmail.com" />
       <meta name="owner" content="Usama Javed" />
       <meta name="url" content={siteUrl} />
       <meta name="identifier-url" content={siteUrl} />
