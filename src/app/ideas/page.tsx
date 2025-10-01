@@ -158,7 +158,7 @@ Let's bring this idea to life together!`;
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 text-white overflow-hidden">
+    <div className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 text-white overflow-hidden">
       {/* Animated Background */}
       <div className="fixed inset-0 z-0">
         <div

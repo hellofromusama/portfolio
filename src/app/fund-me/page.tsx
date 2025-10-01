@@ -147,7 +147,7 @@ export default function FundMePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 text-white">
+    <div className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 text-white">
       <Navigation currentPage="fund-me" />
 
       <div className="pt-20">
