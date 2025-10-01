@@ -15,6 +15,7 @@ const projects = {
     category: "Humanitarian",
     timeline: "1 month",
     team: "1 developer (solo project)",
+    liveUrl: "https://iamstandingwithkashmir.org",
     features: [
       "Secure Stripe payment integration for donations",
       "Beautiful Chinar leaf animations representing Kashmir's heritage",
@@ -342,12 +343,36 @@ export default async function ProjectDetail({ params }: { params: Promise<{ id: 
               </div>
             </div>
 
-            <div className={`h-96 bg-gradient-to-br ${project.gradient} rounded-2xl relative overflow-hidden`}>
-              <div className="absolute inset-0 bg-black/20" />
-              <div className="absolute bottom-6 left-6">
-                <div className="text-white/90 text-lg font-semibold">Live Project</div>
+            {project.liveUrl ? (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`h-96 bg-gradient-to-br ${project.gradient} rounded-2xl relative overflow-hidden block group cursor-pointer transition-transform duration-300 hover:scale-105`}
+              >
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-white text-6xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    🔗
+                  </div>
+                </div>
+                <div className="absolute bottom-6 left-6">
+                  <div className="text-white/90 text-lg font-semibold group-hover:text-white transition-colors">
+                    🌐 Visit Live Website
+                  </div>
+                  <div className="text-white/70 text-sm mt-1 group-hover:text-white/90 transition-colors">
+                    Click to open →
+                  </div>
+                </div>
+              </a>
+            ) : (
+              <div className={`h-96 bg-gradient-to-br ${project.gradient} rounded-2xl relative overflow-hidden`}>
+                <div className="absolute inset-0 bg-black/20" />
+                <div className="absolute bottom-6 left-6">
+                  <div className="text-white/90 text-lg font-semibold">Live Project</div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
