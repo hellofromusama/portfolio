@@ -2,6 +2,43 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 const projects = {
+  "kashmir-fund": {
+    title: "Fund for Azad Kashmir",
+    subtitle: "Humanitarian Donation Platform",
+    description: "A beautiful humanitarian donation platform supporting relief efforts in Azad Kashmir, featuring Stripe payment integration, transparent fund tracking, and stunning Chinar leaf animations representing Kashmir's natural heritage.",
+    longDescription: `This humanitarian platform provides a secure and transparent way for people worldwide to contribute to relief efforts in Azad Kashmir. Built with modern web technologies, the platform ensures smooth donation processing while maintaining the highest standards of security and transparency.
+
+    The website features beautiful Chinar leaf animations that represent Kashmir's natural beauty and cultural heritage. Each falling leaf symbolizes hope and support for the people of Azad Kashmir. The platform integrates with Stripe for secure payment processing, ensuring donors' financial information is protected.
+
+    All donations are tracked transparently with detailed usage reports, showing exactly how funds are being utilized for humanitarian efforts including food, shelter, medical supplies, and education support for affected communities.`,
+    tech: ["Next.js 15", "React 19", "Stripe", "Tailwind CSS v4", "TypeScript", "Vercel"],
+    category: "Humanitarian",
+    timeline: "1 month",
+    team: "1 developer (solo project)",
+    features: [
+      "Secure Stripe payment integration for donations",
+      "Beautiful Chinar leaf animations representing Kashmir's heritage",
+      "Transparent fund usage tracking and reporting",
+      "Responsive design optimized for all devices",
+      "Real-time donation processing and confirmation",
+      "Email receipts for all donations",
+      "Success page with donation confirmation",
+      "Deployed on custom domain with SSL security"
+    ],
+    challenges: [
+      "Implementing secure Stripe checkout with proper error handling",
+      "Creating smooth, performant animations without affecting page speed",
+      "Ensuring proper DNS configuration for custom domain",
+      "Maintaining cultural sensitivity in design and messaging"
+    ],
+    results: [
+      "Live platform accepting donations at iamstandingwithkashmir.org",
+      "Secure payment processing with Stripe integration",
+      "Beautiful, culturally respectful design",
+      "Fast loading times with 95+ Lighthouse score"
+    ],
+    gradient: "from-green-500 to-orange-600"
+  },
   "n8n-automation": {
     title: "N8N Automation Platform",
     subtitle: "Enterprise Workflow Automation",
