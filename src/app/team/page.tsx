@@ -22,8 +22,8 @@ export default function TeamPage() {
     {
       id: "usama-javed",
       name: "Usama Javed",
-      role: "Full Stack Developer",
-      company: "Digital Innovation Architect",
+      role: "CEO & Founder",
+      company: "Hangul Inc",
       image: "/team/usama-javed.png",
       socials: {
         linkedin: "https://www.linkedin.com/in/hellofromusama/",
@@ -32,25 +32,25 @@ export default function TeamPage() {
       }
     },
     {
-      id: "member-2",
-      name: "Team Member 2",
-      role: "Frontend Engineer",
-      company: "Tech Company",
-      image: "/team/placeholder-2.jpg",
+      id: "abdullah-shaukat",
+      name: "Abdullah Shaukat",
+      role: "Junior Software Engineer & Junior Data Scientist",
+      company: "Hangul Inc",
+      image: "/team/abdullah.png",
       socials: {
-        linkedin: "#",
-        twitter: "#"
+        linkedin: "https://www.linkedin.com/in/abdullah-iqbal-b21880387/",
+        twitter: "https://x.com/abdullahmi91698"
       }
     },
     {
-      id: "member-3",
-      name: "Team Member 3",
-      role: "Backend Developer",
-      company: "Innovation Labs",
-      image: "/team/placeholder-3.jpg",
+      id: "anas-javed",
+      name: "Anas Javed",
+      role: "Junior Data Scientist & Student",
+      company: "Hangul Inc",
+      image: "/team/anas.png",
       socials: {
-        linkedin: "#",
-        github: "#"
+        linkedin: "https://www.linkedin.com/in/hellofromanas/",
+        twitter: "https://x.com/hellofromanas_"
       }
     },
     {
