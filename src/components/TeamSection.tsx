@@ -37,7 +37,7 @@ export default function TeamSection() {
     {
       id: "abdullah-shaukat",
       name: "Abdullah Shaukat",
-      role: "Junior Software Engineer & Student",
+      role: "Junior Software Engineer & Junior Data Scientist",
       company: "Hangul Inc",
       image: "/team/abdullah.png",
       socials: {
