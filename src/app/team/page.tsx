@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 
 interface TeamMember {
   id: string;
@@ -219,8 +218,6 @@ export default function TeamPage() {
           </div>
         </div>
       </section>
-
-      <Footer />
 
       <style jsx>{`
         @keyframes fadeInUp {
